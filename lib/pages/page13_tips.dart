@@ -10,7 +10,7 @@ class Tips1 extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           PageTitle("給技術導入者的建議"),
-          Subtitle("推動者的身份？ Top down / Bottom up"),
+          Subtitle("推動者的角色：Top down / Bottom up"),
 
           Subtitle("新專案導入：技術選型 → 執行 → 成果擴散"),
           Subtitle("既有專案導入："),
