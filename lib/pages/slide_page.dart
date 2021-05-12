@@ -8,8 +8,10 @@ class SlidePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    double paddingH = MediaQuery.of(context).size.width * 0.1;
+    double paddingV = MediaQuery.of(context).size.height * 0.1;
     return Container(
-      padding: const EdgeInsets.only(left: 80, right: 80, top: 60),
+      padding: EdgeInsets.only(left: paddingH, right: paddingH, top: paddingV),
       child: pageContent,
     );
   }
