@@ -13,7 +13,7 @@ class MyRewardsBackgroundPage extends StatelessWidget {
           Point("導入 Flutter 時間：2019"),
           Point("AAR / Framework → Flutter module source code"),
           Point("Flutter SDK channel ＆ version"),
-          Point("Flutter 與 原生 溝通機制與介面實作"),
+          Point("Flutter ⟷︎ 原生 溝通機制"),
           Point("Pre warm engine"),
           Point("CI/CD Flutter 環境與執行階段"),
           Point("各種踩雷"),
