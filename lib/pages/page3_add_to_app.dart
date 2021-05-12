@@ -11,7 +11,6 @@ class AddToAppIntroductionPage extends StatelessWidget {
         direction: Axis.vertical,
         children: [
           PageTitle("Add-to-App"),
-          TextUrl("https://flutter.dev/docs/development/add-to-app"),
           Subtitle("Add2App / Add Flutter to existing app"),
 
           Padding(
