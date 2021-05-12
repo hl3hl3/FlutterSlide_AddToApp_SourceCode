@@ -35,146 +35,126 @@ class Carousel extends StatefulWidget {
 }
 
 class _CarouselState extends State<Carousel> with TickerProviderStateMixin {
-  AnimationController animationController;
-  AnimationController animationController1;
-  AnimationController animationController2;
-  AnimationController animationController3;
-  Timer timer;
-  int index = 0;
-
-  int frame = 0;
-  int skip = 0;
-
   @override
   void initState() {
     super.initState();
-    animationController = AnimationController(
-      // duration: Duration(seconds: 2),
-      vsync: this,
-      value: 0,
-    );
-    animationController1 = AnimationController(
-      // duration: Duration(seconds: 2),
-      vsync: this,
-      value: 0,
-    );
-    animationController2 = AnimationController(
-      // duration: Duration(seconds: 2),
-      vsync: this,
-      value: 0,
-    );
-    animationController3 = AnimationController(
-      // duration: Duration(seconds: 2),
-      vsync: this,
-      value: 0,
-    );
-    timer = Timer.periodic(Duration(milliseconds: 30), (timer) {
-      if (skip-- > 0) {
-        return;
-      }
-
-      switch (index) {
-        case 0:
-          animationController.value += d;
-          if (animationController3.value > 0) {
-            animationController3.value -= d;
-          }
-          break;
-        case 1:
-          animationController1.value += d;
-          if (animationController.value > 0) {
-            animationController.value -= d;
-          }
-          break;
-        case 2:
-          animationController2.value += d;
-          if (animationController1.value > 0) {
-            animationController1.value -= d;
-          }
-          break;
-        case 3:
-          animationController3.value += d;
-          if (animationController2.value > 0) {
-            animationController2.value -= d;
-          }
-          break;
-      }
-
-      if (animationController.value == 1) {
-        skip = skipFrame;
-        index = 1;
-      }
-      if (animationController1.value == 1) {
-        skip = skipFrame;
-        index = 2;
-      }
-      if (animationController2.value == 1) {
-        skip = skipFrame;
-        index = 3;
-      }
-      if (animationController3.value == 1) {
-        skip = skipFrame;
-        index = 0;
-      }
-    });
+    _initiateAnimation();
   }
-
-  final skipFrame = 40;
-  final d = 0.05;
 
   @override
   void dispose() {
-    timer.cancel();
+    _stopAnimation();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
+    final height = MediaQuery.of(context).size.height * 0.5;
     return Stack(
       alignment: Alignment.center,
       children: [
         FadeTransition(
-          opacity: animationController.drive(CurveTween(curve: Curves.easeOut)),
-          child: Carousel1(),
+          opacity: _animationController.drive(CurveTween(curve: Curves.easeOut)),
+          child: Carousel1(height),
         ),
         FadeTransition(
           opacity:
-              animationController1.drive(CurveTween(curve: Curves.easeOut)),
-          child: Carousel2(),
+              _animationController1.drive(CurveTween(curve: Curves.easeOut)),
+          child: Carousel2(height),
         ),
         FadeTransition(
           opacity:
-              animationController2.drive(CurveTween(curve: Curves.easeOut)),
-          child: Carousel3(),
+              _animationController2.drive(CurveTween(curve: Curves.easeOut)),
+          child: Carousel3(height),
         ),
         FadeTransition(
           opacity:
-              animationController3.drive(CurveTween(curve: Curves.easeOut)),
-          child: Carousel4(),
+              _animationController3.drive(CurveTween(curve: Curves.easeOut)),
+          child: Carousel4(height),
         ),
       ],
     );
-    // return AnimatedOpacity(
-    //   opacity: _opacity,
-    //   onEnd: () {
-    //     if (_opacity == 1) {
-    //       _opacity = 0;
-    //     } else {
-    //       _opacity = 1;
-    //     }
-    //     setState(() {});
-    //   },
-    //   duration: Duration(seconds: 2),
-    //   child: Carousel1(),
-    // );
+  }
+
+  AnimationController _animationController;
+  AnimationController _animationController1;
+  AnimationController _animationController2;
+  AnimationController _animationController3;
+  Timer _timer;
+  int _index = 0;
+  int _frameShouldSkip = 0;
+
+  _initiateAnimation() {
+    _animationController = AnimationController(vsync: this, value: 0);
+    _animationController1 = AnimationController(vsync: this, value: 0);
+    _animationController2 = AnimationController(vsync: this, value: 0);
+    _animationController3 = AnimationController(vsync: this, value: 0);
+    _timer = Timer.periodic(Duration(milliseconds: 30), (timer) {
+      if (_frameShouldSkip-- > 0) {
+        return;
+      }
+
+      switch (_index) {
+        case 0:
+          _changeValueByFrame(
+            shouldFadeIn: _animationController,
+            shouldFadeOut: _animationController3,
+          );
+          break;
+        case 1:
+          _changeValueByFrame(
+            shouldFadeIn: _animationController1,
+            shouldFadeOut: _animationController,
+          );
+          break;
+        case 2:
+          _changeValueByFrame(
+            shouldFadeIn: _animationController2,
+            shouldFadeOut: _animationController1,
+          );
+          break;
+        case 3:
+          _changeValueByFrame(
+            shouldFadeIn: _animationController3,
+            shouldFadeOut: _animationController2,
+          );
+          break;
+      }
+
+      if (_animationController.value == 1 ||
+          _animationController1.value == 1 ||
+          _animationController2.value == 1 ||
+          _animationController3.value == 1) {
+        _frameShouldSkip = 40;
+        _index = ++_index % 4;
+      }
+    });
+  }
+
+  _changeValueByFrame({
+    AnimationController shouldFadeIn,
+    AnimationController shouldFadeOut,
+  }) {
+    shouldFadeIn.value += 0.05;
+    if (shouldFadeOut.value > 0) {
+      shouldFadeOut.value -= 0.05;
+    }
+  }
+
+  _stopAnimation() {
+    _timer.cancel();
   }
 }
 
 class Carousel1 extends StatelessWidget {
+  final double height;
+
+  Carousel1(this.height);
+
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 600,
+      height: height,
       child: Stack(
         alignment: Alignment.center,
         children: [
@@ -206,10 +186,14 @@ class Carousel1 extends StatelessWidget {
 }
 
 class Carousel2 extends StatelessWidget {
+  final double height;
+
+  Carousel2(this.height);
+
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 600,
+      height: height,
       child: Stack(
         alignment: Alignment.center,
         children: [
@@ -247,10 +231,14 @@ class Carousel2 extends StatelessWidget {
 }
 
 class Carousel3 extends StatelessWidget {
+  final double height;
+
+  Carousel3(this.height);
+
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 600,
+      height: height,
       child: Stack(
         alignment: Alignment.center,
         children: [
@@ -289,10 +277,14 @@ class Carousel3 extends StatelessWidget {
 }
 
 class Carousel4 extends StatelessWidget {
+  final double height;
+
+  Carousel4(this.height);
+
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 600,
+      height: height,
       child: Stack(
         alignment: Alignment.center,
         children: [
